@@ -56,7 +56,7 @@ prompt_end() {
 
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
-  prompt_segment 008 010 "%(!.%{%F{yellow}%}.)%n"
+  prompt_segment 208 234 "%(!.%{%F{220}%}.)%n"
 }
 
 # Git: branch/detached head, dirty status
@@ -74,9 +74,9 @@ prompt_git() {
     dirty=$(parse_git_dirty)
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
     if [[ -n $dirty ]]; then
-      prompt_segment yellow black
+      prompt_segment 214 235
     else
-      prompt_segment 014 002
+      prompt_segment 172 235
     fi
 
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
@@ -109,15 +109,15 @@ prompt_bzr() {
         status_all=`bzr status | head -n1 | wc -m`
         revision=`bzr log | head -n2 | tail -n1 | sed 's/^revno: //'`
         if [[ $status_mod -gt 0 ]] ; then
-            prompt_segment yellow black
+            prompt_segment 214 235
             echo -n "bzr@"$revision "✚ "
         else
             if [[ $status_all -gt 0 ]] ; then
-                prompt_segment yellow black
+                prompt_segment 172 235
                 echo -n "bzr@"$revision
 
             else
-                prompt_segment green black
+                prompt_segment 142 235
                 echo -n "bzr@"$revision
             fi
         fi
@@ -131,15 +131,15 @@ prompt_hg() {
     if $(hg prompt >/dev/null 2>&1); then
       if [[ $(hg prompt "{status|unknown}") = "?" ]]; then
         # if files are not added
-        prompt_segment red white
+        prompt_segment 196 235
         st='±'
       elif [[ -n $(hg prompt "{status|modified}") ]]; then
         # if any modification
-        prompt_segment yellow black
+        prompt_segment 214 235
         st='±'
       else
         # if working copy is clean
-        prompt_segment green black
+        prompt_segment 142 235
       fi
       echo -n $(hg prompt "☿ {rev}@{branch}") $st
     else
@@ -147,13 +147,13 @@ prompt_hg() {
       rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
       branch=$(hg id -b 2>/dev/null)
       if `hg st | grep -q "^\?"`; then
-        prompt_segment red black
+        prompt_segment 196 235
         st='±'
       elif `hg st | grep -q "^[MA]"`; then
-        prompt_segment yellow black
+        prompt_segment 214 235
         st='±'
       else
-        prompt_segment green black
+        prompt_segment 142 235
       fi
       echo -n "☿ $rev@$branch" $st
     fi
@@ -168,7 +168,7 @@ prompt_dir() {
 # Virtualenv: current working virtualenv
 prompt_virtualenv() {
   if [[ -n $CONDA_PROMPT_MODIFIER ]]; then
-    prompt_segment black default ${CONDA_PROMPT_MODIFIER:1:-2}
+    prompt_segment 94 235 ${CONDA_PROMPT_MODIFIER:1:-2}
   fi
 }
 
@@ -179,16 +179,16 @@ prompt_virtualenv() {
 prompt_status() {
   local symbols
   symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
+  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{196}%}✘"
+  [[ $UID -eq 0 ]] && symbols+="%{%F{220}%}⚡"
+  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{37}%}⚙"
 
-  [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
+  [[ -n "$symbols" ]] && prompt_segment 235 default "$symbols"
 }
 
 prompt_head() {
   echo "\r               "  # Clear prevous line
-  echo "\r %{%F{8}%}[%64<..<%~%<<]"  # Print Dir.
+  echo "\r %{%F{245}%}[%64<..<%~%<<]"  # Print Dir.
 }
 
 ## Main prompt
